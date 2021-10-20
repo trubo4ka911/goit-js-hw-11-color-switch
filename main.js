@@ -5,13 +5,32 @@ const randomIntegerFromInterval = (min, max) => {
 
 const btnStart = document.querySelector('[data-action="start"]');
 const btnStop = document.querySelector('[data-action="stop"]');
-const body = document.getElementsByTagName("body")[0];
+const body = document.querySelector("body");
 
-btnStart.onclick = () => {
-	const timerId = setTimeout(() => {
-		body.style.backgroundColor = colors[randomIntegerFromInterval(0, colors.length - 1)];
-	}, 1000);
-	btnStop.onclick = () => {
-		clearTimeout(timerId);
-	};
+const timer = {
+	intervalId: null,
+	isActive: false,
+
+	start() {
+		if (this.isActive) {
+			return;
+		}
+		this.isActive = true;
+
+		this.intervalId = setInterval(() => {
+			body.style.backgroundColor = colors[randomIntegerFromInterval(0, colors.length - 1)];
+		}, 1000);
+	},
+
+	stop() {
+		clearInterval(this.intervalId);
+		this.isActive = false;
+	},
 };
+
+btnStart.addEventListener("click", () => {
+	timer.start();
+});
+btnStop.addEventListener("click", () => {
+	timer.stop();
+});
